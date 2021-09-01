@@ -3,18 +3,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build Docker Image
-        uses: docker/build-push-action@v1
+      - name: Docker Extract
+  # You may pin to the exact commit or the version.
+  # uses: shrink/actions-docker-extract@7d86f1b9adc7afe4a64e13fb425872a547d6afa3
+        uses: shrink/actions-docker-extract@v1
         with:
-          repository: cosmos-sdk-epub
-          tags: latest
-      - uses: shrink/actions-docker-extract@v1
-        with:
-          image: cosmos-sdk-epub
+            # Docker Image to extract files from
+          image: ghcr.io/david-sorm/cosmos-sdk-epub:main
+            # Path (from root) to a file or directory within Image
           path: /tmp/cosmos-sdk/docs/book.epub
-      - name: Upload Dist
-        uses: actions/upload-artifact@v2
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
         with:
+          # Artifact name
+          name: book.epub # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
           path: ${{ steps.extract.outputs.destination }}
-          name: dist
